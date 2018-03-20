@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>L3 Dashboard</title>
+        <link rel="stylesheet" href="./css/bootstrap.min.css" />
+        <link rel="stylesheet" href="./css/bootstrap-reboot.min.css" />
+        <link rel="stylesheet" href="./css/bootstrap-grid.min.css" />
+        <link rel="stylesheet" href="./css/app.css" />
+        <script type="text/javascript" src="./scripts/app.js"></script>
+        <!-- Include vis part -->
+        <link rel="stylesheet" href="./node_modules/vis/dist/vis.min.css" />
+        <script type="text/javascript" src="./node_modules/vis/dist/vis.min.js"></script>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row" id="nav_wrapper">
+                <div class="col-md-2"><h4>Logo</h4></div>
+                <div class="col-md-10">
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><a href="#">Home</a></li>
+                        <li class="list-inline-item"><a href="#">Status</a></li>
+                        <li class="list-inline-item"><a href="#">Apps</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- EOF nav wrapper -->
+            <div class="row" id="notification_wrapper">
+                <div class="col-md-12">
+                    <p> Notifications goes here.. </p>
+                </div>
+            </div>
+            <!-- EOF of notification wrapper -->
+            <div class="row" id="content_wrapper">
+                <div class="col-md-12">
+                    <div id="mynetwork"></div>
+                </div>
+                <div class="col-md-12">
+                    <div id="interaction_area"></div>
+                </div>
+            </div>
+     </div>
+    
+
+<script type="text/javascript">
+    // create an array with nodes
+    var nodes = new vis.DataSet([
+        {id: 1, label: 'FW-1', shape: "circle"},
+        {id: 2, label: 'FW-2', shape: "circle"},
+        {id: 3, label: 'Clean', shape: "circle"},
+        {id: 4, label: 'Xform', shape: "circle"},
+        {id: 5, label: 'Load', shape: "circle"}
+    ]);
+
+    // create an array with edges
+    var edges = new vis.DataSet([
+        {from: 1, to: 3},
+        {from: 2, to: 3},
+        {from: 3, to: 4},
+        {from: 4, to: 5}
+    ]);
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+
+    // provide the data in the vis format
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var options = {
+        height: "100%",
+        width: "100%",
+        autoResize: false,
+        clickToUse: true,
+        edges:{
+            arrows: {
+              to:     {enabled: true, scaleFactor:1, type:'arrow'},
+              middle: {enabled: false, scaleFactor:1, type:'arrow'},
+              from:   {enabled: false, scaleFactor:1, type:'arrow'}
+            }
+        },
+        physics: false,
+        layout: {
+            hierarchical: {
+                enabled: true,
+                direction: 'LR'
+            }
+        },
+        manipulation: {
+            enabled: false
+        },
+        interaction:{
+            dragNodes: false,
+            dragView: false,
+            hover: true,
+            zoomView: false
+        }
+    };
+
+    // initialize your network!
+    var network = new vis.Network(container, data, options);
+    var _ar = ["FW-1","FW-2","Clean","Xform", "Load"];
+    network.on("click", function (params) {
+        params.event = "[original event]";
+        document.getElementById('interaction_area').innerHTML = "Job name: "+ _ar[params["nodes"] - 1];
+        console.log('click event, getNodeAt returns: ' + this.getNodeAt(params.pointer.DOM));
+    });
+</script>
+
+ </body>
+</html>
